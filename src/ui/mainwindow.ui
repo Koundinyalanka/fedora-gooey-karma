@@ -609,7 +609,7 @@ p, li { white-space: pre-wrap; }
                     </property>
                     <item>
                      <property name="text">
-                      <string>-1</string>
+                      <string>+1</string>
                      </property>
                     </item>
                     <item>
@@ -619,7 +619,7 @@ p, li { white-space: pre-wrap; }
                     </item>
                     <item>
                      <property name="text">
-                      <string>+1</string>
+                      <string>-1</string>
                      </property>
                     </item>
                    </widget>

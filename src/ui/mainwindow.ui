@@ -61,7 +61,7 @@
                  <string>Clear search</string>
                 </property>
                 <property name="text">
-                 <string>X</string>
+                 <string>Clear</string>
                 </property>
                </widget>
               </item>

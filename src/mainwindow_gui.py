@@ -393,7 +393,7 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Filter", None, QtGui.QApplication.UnicodeUTF8))
         self.searchEdit.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "Search packages...", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Clear search", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "X", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaCheckBox.setText(QtGui.QApplication.translate("MainWindow", "User filter", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaFilterUserCombo.setItemText(0, QtGui.QApplication.translate("MainWindow", "Karma not submitted by user", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaFilterUserCombo.setItemText(1, QtGui.QApplication.translate("MainWindow", "Karma submitted by user", None, QtGui.QApplication.UnicodeUTF8))
@@ -410,7 +410,7 @@ class Ui_MainWindow(object):
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">To load updates, press lower-left <span style=\" font-weight:600;\">Reload packages</span> button. If you are not sure what you should test, wait until all packages are loaded and see the list of packages to test on the left side.<br /></p>\nBelow this text you can find updates with negative karma and currently running applications.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBoxWhatToTest.setItemText(self.toolBoxWhatToTest.indexOf(self.toolBoxWelcome), QtGui.QApplication.translate("MainWindow", "Fedora Gooey Karma", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "It would be nice to re-test updates which has got negative karma. See these packages below.", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "It would be nice to re-test updates which has got negative karma.<br>See these packages below.", None, QtGui.QApplication.UnicodeUTF8))
         self.tool_pkg_list_negative.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Package", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBoxWhatToTest.setItemText(self.toolBoxWhatToTest.indexOf(self.toolBoxNegativeKarma), QtGui.QApplication.translate("MainWindow", "Updates with negative karma", None, QtGui.QApplication.UnicodeUTF8))
         self.tool_pkg_list_running.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Package", None, QtGui.QApplication.UnicodeUTF8))
@@ -465,5 +465,5 @@ class Ui_MainWindow(object):
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About Fedora Gooey Karma", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About Gooey Karma", None, QtGui.QApplication.UnicodeUTF8))
 

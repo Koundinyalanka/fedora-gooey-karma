@@ -34,7 +34,7 @@ import datetime
 import koji
 from PySide import QtCore
 from PySide import QtGui
-
+import qrc_resources
 from customgui import CustomTreeWidgetItem
 from mainwindow_gui import Ui_MainWindow
 from packagesworker import PackagesWorker
@@ -201,7 +201,8 @@ class MainWindow(QtGui.QMainWindow):
 
     def __show_message_box_about(self):
         text = (
-            "<img src='icons/256x256/apps/fedora-gooey-karma' align='right' width='128' height='128'><br>"
+            #"<img src='icons/256x256/apps/fedora-gooey-karma' align='right' width='128' height='128'><br>"
+            "<img src=':/fedora-gooey-karma.png' align='right' width='128' height='128'><br>"
             "<b>Fedora Gooey Karma</b> is a tool for browsing installed packages from updates-testing repository.<br><br>"
             "You can easily add karma comment, open bugs attached to new build and more.<br><br>"
             "Please feel free to <a href=\"https://github.com/blaskovic/fedora-gooey-karma/issues\">report any issues</a> and "

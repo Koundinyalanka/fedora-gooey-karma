@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file alias="karma-angel.png">icons/karma-angel.png</file>
+<file alias="karma-plain.png">icons/karma-plain.png</file>
+<file alias="karma-crying.png">icons/karma-crying.png</file>
+<file alias="fedora-gooey-karma.png">icons/256x256/apps/fedora-gooey-karma.png</file>
+</qresource>
+</RCC>

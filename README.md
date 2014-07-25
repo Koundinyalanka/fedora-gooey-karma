@@ -26,7 +26,7 @@ To install these dependencies, use this command:
 
 ### Clone the repo
     
-    git clone https://github.com/blaskovic/fedora-gooey-karma.git
+    git clone https://github.com/regeciovad/fedora-gooey-karma.git
     cd fedora-gooey-karma
     
 ### Run the application

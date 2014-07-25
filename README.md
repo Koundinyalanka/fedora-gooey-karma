@@ -55,7 +55,7 @@ Please review this script before to adjust paths of rpmbuild and so.
     
     Branislav Blaskovic <branislav@blaskovic.sk>
     Tomas Meszaros <exo@tty.sk>
-    Dominika Regeciova <xregec00@stud.fit.vutbr.cz>
+    Dominika Regeciova <regeciovad@gmail.com>
     
 ## Blog
 

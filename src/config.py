@@ -156,7 +156,7 @@ class Config:
 
         # Save password to keyring (if set)
         try:
-            if self.__fas_password != '' and self.fas_name != '':
+            if self.ui.fasCheckBox.isChecked() and self.__fas_password != '' and self.fas_name != '':
                 keyring.set_password(self.__KEYRING_SERVICE_NAME, str(self.fas_name), str(self.__fas_password))
         except:
             print "Error in save_config() while saving FAS token to keyring."

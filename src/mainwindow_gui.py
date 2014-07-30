@@ -284,6 +284,12 @@ class Ui_MainWindow(object):
         self.sendBtn.setObjectName("sendBtn")
         self.horizontalLayout_8.addWidget(self.sendBtn)
         self.verticalLayout_2.addLayout(self.horizontalLayout_8)
+                
+        self.fasCheckBox = QtGui.QCheckBox(self.groupBox)
+        self.fasCheckBox.setChecked(True)
+        self.fasCheckBox.setObjectName("fasCheckBox")
+        self.verticalLayout_2.addWidget(self.fasCheckBox)
+        
         self.label_2 = QtGui.QLabel(self.tabPkg_karma)
         font = QtGui.QFont()
         font.setPointSize(16)
@@ -396,6 +402,7 @@ class Ui_MainWindow(object):
         self.pushButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Clear search", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaCheckBox.setText(QtGui.QApplication.translate("MainWindow", "User filter", None, QtGui.QApplication.UnicodeUTF8))
+        self.fasCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Keep me signed in", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaFilterUserCombo.setItemText(0, QtGui.QApplication.translate("MainWindow", "Karma not submitted by user", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaFilterUserCombo.setItemText(1, QtGui.QApplication.translate("MainWindow", "Karma submitted by user", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaUsernameEdit.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "username for karma filter", None, QtGui.QApplication.UnicodeUTF8))

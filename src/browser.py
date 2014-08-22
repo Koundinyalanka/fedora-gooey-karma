@@ -21,6 +21,10 @@
 #    Author: Branislav Blaskovic <branislav@blaskovic.sk>
 
 import webbrowser
+import rpm
+import os
+
+
 
 class WebBrowser:
 
@@ -64,6 +68,20 @@ class WebBrowser:
         url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/src/%s.src.rpm" % (name, version, release, update['itemlist_name'])
         # Maybe it would be nice to show Save dialog and save directly to hdd
         webbrowser.open_new_tab(url)
+        
+
+    # Install rpm packages, inspirated by Fedora Draft Documentation    
+    def install_source_rpm(self):
+        update = self.main.get_bodhi_update()
+        if not update:
+            return
+        name = update['parsed_nvr']['name']
+        version = update['parsed_nvr']['version']
+        release = update['parsed_nvr']['release']
+        url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/i686/%s.i686.rpm" % (name, version, release, update['itemlist_name'])
+        full_name = "%s.i686.rpm" % (update['itemlist_name'])
+        os.system('mkdir fgktmp; cd fgktmp; wget %s; sudo rpm -Uhv --root /fgktmp %s' % (url, full_name))
+
 
     def show_testcase_in_browser(self):
         testcase_name = self.main.ui.treeWidget_test_cases.currentItem().text(0).replace(' ', '_')

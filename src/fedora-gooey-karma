@@ -126,6 +126,7 @@ class MainWindow(QtGui.QMainWindow):
         ## Package settings
         self.ui.pkg_settings_open_bodhi_update.clicked.connect(self.webbrowser.show_bodhi_update_in_browser, QtCore.Qt.QueuedConnection)
         self.ui.pkg_settings_download_source_rpm.clicked.connect(self.webbrowser.download_source_rpm, QtCore.Qt.QueuedConnection)
+        self.ui.pkg_settings_install_source_rpm.clicked.connect(self. __install_pkg_worker, QtCore.Qt.QueuedConnection)
         self.ui.settings_pkg_cat_normal.toggled.connect(self.__set_pkg_category, QtCore.Qt.QueuedConnection)
         self.ui.settings_pkg_cat_favorite.toggled.connect(self.__set_pkg_category, QtCore.Qt.QueuedConnection)
         self.ui.settings_pkg_cat_ignored.toggled.connect(self.__set_pkg_category, QtCore.Qt.QueuedConnection)
@@ -322,6 +323,10 @@ class MainWindow(QtGui.QMainWindow):
                 continue
 
             self.ui.releaseComboBox.addItem(release)
+
+    def __install_pkg_worker(self):
+        self.webbrowser.install_source_rpm()
+
 
     def __start_pkg_worker(self):
         # Get release and put it to queue

@@ -21,6 +21,7 @@
 #    Author: Branislav Blaskovic <branislav@blaskovic.sk>
 
 import webbrowser
+import platform
 import rpm
 import os
 
@@ -78,8 +79,9 @@ class WebBrowser:
         name = update['parsed_nvr']['name']
         version = update['parsed_nvr']['version']
         release = update['parsed_nvr']['release']
-        url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/i686/%s.i686.rpm" % (name, version, release, update['itemlist_name'])
-        full_name = "%s.i686.rpm" % (update['itemlist_name'])
+        architecture = platform.processor()
+        url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/%s/%s.%s.rpm" % (name, version, release, architecture, update['itemlist_name'], architecture)
+        full_name = "%s.%s.rpm" % (update['itemlist_name'], architecture)
         os.system('mkdir fgktmp; cd fgktmp; wget %s; sudo rpm -Uhv --root /fgktmp %s' % (url, full_name))
 
 

@@ -325,7 +325,11 @@ class MainWindow(QtGui.QMainWindow):
             self.ui.releaseComboBox.addItem(release)
 
     def __install_pkg_worker(self):
-        self.webbrowser.install_source_rpm()
+        if not os.geteuid()==0:
+            message = "You must be root to run installation. Please, use sudo and try again."
+            self.ui.statusBar.showMessage(message)
+        else:
+            self.webbrowser.install_source_rpm()
 
 
     def __start_pkg_worker(self):

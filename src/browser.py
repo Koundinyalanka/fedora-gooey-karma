@@ -83,6 +83,15 @@ class WebBrowser:
         url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/%s/%s.%s.rpm" % (name, version, release, architecture, update['itemlist_name'], architecture)
         full_name = "%s.%s.rpm" % (update['itemlist_name'], architecture)
         os.system('mkdir fgktmp; cd fgktmp; wget %s; sudo rpm -Uhv --root /fgktmp %s' % (url, full_name))
+        
+    # Remove rpm packages, inspirated by Fedora Draft Documentation    
+    def remove_source_rpm(self):
+        update = self.main.get_bodhi_update()
+        if not update:
+            return
+        architecture = platform.processor()
+        full_name = "%s.%s" % (update['itemlist_name'], architecture)
+        os.system('sudo rpm -e %s' % (full_name))
 
 
     def show_testcase_in_browser(self):

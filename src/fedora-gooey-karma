@@ -25,6 +25,7 @@
 import os
 import re
 import sys
+import platform 
 
 sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../share/fedora-gooey-karma'))
 
@@ -329,7 +330,18 @@ class MainWindow(QtGui.QMainWindow):
             message = "You must be root to run installation. Please, use sudo and try again."
             self.ui.statusBar.showMessage(message)
         else:
-            self.webbrowser.install_source_rpm()
+            bodhi_update = self.get_bodhi_update()
+            if bodhi_update is None:
+                return
+
+            # Is rpm package installed?
+            rpmController = is_installed(bodhi_update)
+            if rpmController == 0:
+                self.webbrowser.install_source_rpm()
+                self.ui.pkg_settings_install_source_rpm.setText('Remove') 
+            else:
+                self.webbrowser.remove_source_rpm()
+                self.ui.pkg_settings_install_source_rpm.setText('Install') 
 
 
     def __start_pkg_worker(self):
@@ -511,6 +523,13 @@ class MainWindow(QtGui.QMainWindow):
             return
 
         self.__selected_pkglist_item = bodhi_update
+
+        # Set Install Button
+        rpmController = is_installed(bodhi_update)
+        if rpmController == 1:
+            self.ui.pkg_settings_install_source_rpm.setText('Remove')
+        else:
+            self.ui.pkg_settings_install_source_rpm.setText('Install') 
 
         # Show tab if not here
         self.ui.tabWidget.addTab(self.__tabBar_info_backup, 'Update: ' + bodhi_update['itemlist_name'])
@@ -770,6 +789,17 @@ class MainWindow(QtGui.QMainWindow):
         for i in range(self.__BODHI_WORKERS_COUNT):
             if not self.bodhi_workers[i].isRunning():
                 self.bodhi_workers[i].exit()
+
+# If rpm is installed return 1, else return 0	
+def is_installed(update):
+    architecture = platform.processor()
+    full_name = "%s.%s" % (update['itemlist_name'], architecture)
+    f = os.popen('rpm -qa|egrep "%s"' % (full_name))
+    result = f.read()
+    if result =="":
+        return 0
+    else:
+        return 1
 
 def main():
     app = QtGui.QApplication(sys.argv)

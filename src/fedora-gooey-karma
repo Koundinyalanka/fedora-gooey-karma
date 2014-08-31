@@ -26,6 +26,7 @@ import os
 import re
 import sys
 import platform 
+import getpass
 
 sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../share/fedora-gooey-karma'))
 
@@ -46,6 +47,92 @@ from browser import WebBrowser
 
 from idlequeuedispatcher import ThreadDispatcher
 from sendkarma import SendKarma
+
+class DialogWindow(QtGui.QMainWindow):
+    def __init__(self,main):
+        QtGui.QMainWindow.__init__(self,main)
+        self.label = QtGui.QLabel(self) 
+        self.main = main
+
+        update = self.main.get_bodhi_update()
+        name = update['itemlist_name']       
+        path = "/home/%s/Downloads" % (getpass.getuser())
+        self.nameBox = QtGui.QGroupBox(self)  
+        self.nameBox.setCheckable(False)
+        self.nameBox.setObjectName("nameBox")
+        self.nameBox.setTitle("Name")
+        self.nameBox.move(30,20)
+        self.nameLayout = QtGui.QHBoxLayout()
+        self.nameLayout.setObjectName("nameLayout")
+        self.nameEdit = QtGui.QLineEdit(self)
+        font = QtGui.QFont()
+        font.setItalic(True)
+        self.nameEdit.setFont(font) 
+        self.nameEdit.setInputMask("") 
+        self.nameEdit.setText(name)  
+        self.nameEdit.setObjectName("nameEdit")  
+        self.nameEdit.setFixedWidth(360)   
+        self.nameEdit.move(100,20)
+        
+        self.pathBox = QtGui.QGroupBox(self)  
+        self.pathBox.setCheckable(False)
+        self.pathBox.setObjectName("pathBox")
+        self.pathBox.setTitle("Path")
+        self.pathBox.move(30,90)
+        self.pathLayout = QtGui.QHBoxLayout()
+        self.pathLayout.setObjectName("pathLayout")
+        self.pathEdit = QtGui.QLineEdit(self)
+        font = QtGui.QFont()
+        font.setItalic(True)
+        self.pathEdit.setFont(font) 
+        self.pathEdit.setInputMask("") 
+        self.pathEdit.setText(path)  
+        self.pathEdit.setObjectName("pathEdit")  
+        self.pathEdit.setFixedWidth(300)   
+        self.pathEdit.move(100,90)
+
+        pathBtn = QtGui.QPushButton("...",self)
+        pathBtn.setFixedWidth(50) 
+        pathBtn.move(410,90)
+        pathBtn.clicked.connect(self.openDirectoryDialog, QtCore.Qt.QueuedConnection)
+
+        cancelBtn = QtGui.QPushButton("Cancel",self)
+        cancelBtn.move(100,150)
+        cancelBtn.clicked.connect(self.Cancel)
+        saveBtn = QtGui.QPushButton("Save",self)
+        saveBtn.move(300,150)
+        saveBtn.clicked.connect(self.Accept)
+
+        layout = QtGui.QVBoxLayout()
+        layout.addWidget(self.label)
+        layout.addLayout(self.nameLayout)
+        layout.addWidget(self.nameEdit)
+        layout.addWidget(self.nameBox)
+        layout.addLayout(self.pathLayout)
+        layout.addWidget(self.pathEdit)
+        layout.addWidget(self.pathBox) 
+        layout.addWidget(pathBtn)
+        layout.addWidget(cancelBtn)
+        layout.addWidget(saveBtn)
+        self.setLayout(layout)
+        qr = self.frameGeometry()
+        cp = QtGui.QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+ 
+        self.setWindowTitle("Download source RPM")
+        
+    def Cancel(self):
+        self.close()
+		
+    def Accept(self):
+        self.main.webbrowser.download_source_rpm(self.nameEdit.text(),self.pathEdit.text())
+        self.close()		
+		
+    def openDirectoryDialog(self):
+        flags = QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly
+        directory = QtGui.QFileDialog.getExistingDirectory(self,"Choose Directory",os.getcwd(),flags)
+        self.pathEdit.setText(directory)
 
 class MainWindow(QtGui.QMainWindow):
 
@@ -126,7 +213,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.tabWidget_side.currentChanged.connect(self.__tabside_changed)
         ## Package settings
         self.ui.pkg_settings_open_bodhi_update.clicked.connect(self.webbrowser.show_bodhi_update_in_browser, QtCore.Qt.QueuedConnection)
-        self.ui.pkg_settings_download_source_rpm.clicked.connect(self.webbrowser.download_source_rpm, QtCore.Qt.QueuedConnection)
+        self.ui.pkg_settings_download_source_rpm.clicked.connect(self.__download_pkg_worker, QtCore.Qt.QueuedConnection)
         self.ui.pkg_settings_install_source_rpm.clicked.connect(self. __install_pkg_worker, QtCore.Qt.QueuedConnection)
         self.ui.settings_pkg_cat_normal.toggled.connect(self.__set_pkg_category, QtCore.Qt.QueuedConnection)
         self.ui.settings_pkg_cat_favorite.toggled.connect(self.__set_pkg_category, QtCore.Qt.QueuedConnection)
@@ -324,6 +411,11 @@ class MainWindow(QtGui.QMainWindow):
                 continue
 
             self.ui.releaseComboBox.addItem(release)
+
+    def __download_pkg_worker(self):
+        window = DialogWindow(self)
+        window.resize(500,200)
+        window.show()
 
     def __install_pkg_worker(self):
         if not os.geteuid()==0:

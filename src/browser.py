@@ -24,6 +24,7 @@ import webbrowser
 import platform
 import rpm
 import os
+import urllib
 
 
 
@@ -56,7 +57,7 @@ class WebBrowser:
             return
         webbrowser.open_new_tab(update['bodhi_url'])
 
-    def download_source_rpm(self):
+    def download_source_rpm(self, save_name, path):
         update = self.main.get_bodhi_update()
         if not update:
             return
@@ -66,9 +67,8 @@ class WebBrowser:
         release = update['parsed_nvr']['release']
 
         # Set-up url
-        url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/src/%s.src.rpm" % (name, version, release, update['itemlist_name'])
-        # Maybe it would be nice to show Save dialog and save directly to hdd
-        webbrowser.open_new_tab(url)
+        url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/src/%s.src.rpm" % (name, version, release, update['itemlist_name'])    
+        urllib.urlretrieve("%s" % (url),"%s/%s" % (path, save_name))
         
 
     # Install rpm packages, inspirated by Fedora Draft Documentation    

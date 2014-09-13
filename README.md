@@ -17,11 +17,10 @@ fedora-gooey-karma provides similar functionality to the fedora-easy-karma via G
     python-pyside
     python-keyring
     koji
-    wget
     
 To install these dependencies, use this command:
 
-    yum install python-fedora fedora-cert yum yum-utils bodhi-client python-pyside python-keyring koji wget
+    yum install python-fedora fedora-cert yum yum-utils bodhi-client python-pyside python-keyring koji
     
 ## Installation and usage
 

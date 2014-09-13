@@ -81,8 +81,7 @@ class WebBrowser:
         release = update['parsed_nvr']['release']
         architecture = platform.processor()
         url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/%s/%s.%s.rpm" % (name, version, release, architecture, update['itemlist_name'], architecture)
-        full_name = "%s.%s.rpm" % (update['itemlist_name'], architecture)
-        os.system('mkdir fgktmp; cd fgktmp; wget %s; sudo rpm -Uhv --root /fgktmp %s' % (url, full_name))
+        os.system('sudo rpm -Uhv %s' % (url))
         
     # Remove rpm packages, inspirated by Fedora Draft Documentation    
     def remove_source_rpm(self):

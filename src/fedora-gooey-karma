@@ -427,8 +427,7 @@ class MainWindow(QtGui.QMainWindow):
                 return
 
             # Is rpm package installed?
-            rpmController = is_installed(bodhi_update)
-            if rpmController == 0:
+            if bodhi_update['itemlist_name'] not in self.installed_updates:
                 self.webbrowser.install_source_rpm()
                 self.ui.pkg_settings_install_source_rpm.setText('Remove') 
             else:
@@ -617,8 +616,7 @@ class MainWindow(QtGui.QMainWindow):
         self.__selected_pkglist_item = bodhi_update
 
         # Set Install Button
-        rpmController = is_installed(bodhi_update)
-        if rpmController == 1:
+        if bodhi_update['itemlist_name'] in self.installed_updates:
             self.ui.pkg_settings_install_source_rpm.setText('Remove')
         else:
             self.ui.pkg_settings_install_source_rpm.setText('Install') 
@@ -881,17 +879,6 @@ class MainWindow(QtGui.QMainWindow):
         for i in range(self.__BODHI_WORKERS_COUNT):
             if not self.bodhi_workers[i].isRunning():
                 self.bodhi_workers[i].exit()
-
-# If rpm is installed return 1, else return 0	
-def is_installed(update):
-    architecture = platform.processor()
-    full_name = "%s.%s" % (update['itemlist_name'], architecture)
-    f = os.popen('rpm -qa|egrep "%s"' % (full_name))
-    result = f.read()
-    if result =="":
-        return 0
-    else:
-        return 1
 
 def main():
     app = QtGui.QApplication(sys.argv)

@@ -26,8 +26,6 @@ import rpm
 import os
 import urllib
 
-
-
 class WebBrowser:
 
     # URL constants
@@ -56,20 +54,6 @@ class WebBrowser:
         if not update:
             return
         webbrowser.open_new_tab(update['bodhi_url'])
-
-    def download_source_rpm(self, save_name, path):
-        update = self.main.get_bodhi_update()
-        if not update:
-            return
-
-        name = update['parsed_nvr']['name']
-        version = update['parsed_nvr']['version']
-        release = update['parsed_nvr']['release']
-
-        # Set-up url
-        url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/src/%s.src.rpm" % (name, version, release, update['itemlist_name'])    
-        urllib.urlretrieve("%s" % (url),"%s/%s" % (path, save_name))
-        
 
     # Install rpm packages, inspirated by Fedora Draft Documentation    
     def install_source_rpm(self):

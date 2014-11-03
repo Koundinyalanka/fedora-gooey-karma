@@ -25,7 +25,7 @@ import os
 import re
 import sys
 import platform 
-import getpass
+#from gi.repository import GLib
 import urllib
 import time
 from PySide import QtCore
@@ -44,7 +44,8 @@ class DialogWindow(QtGui.QMainWindow):
 
         update = self.main.get_bodhi_update()
         name = update['itemlist_name']       
-        path = "/home/%s/Downloads" % (getpass.getuser())
+        #path = u"%s" % (GLib.get_user_special_dir(GLib.USER_DIRECTORY_DOWNLOAD).decode('utf-8'))
+        path = "%s" % (os.environ.get("XDG_DOWNLOAD_DIR", os.path.expanduser("~")))
         self.nameBox = QtGui.QGroupBox(self)  
         self.nameBox.setCheckable(False)
         self.nameBox.setObjectName("nameBox")

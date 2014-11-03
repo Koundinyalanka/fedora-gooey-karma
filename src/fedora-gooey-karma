@@ -344,10 +344,10 @@ class MainWindow(QtGui.QMainWindow):
             # Is rpm package installed?
             if bodhi_update['itemlist_name'] not in self.installed_updates:
                 self.webbrowser.install_source_rpm()
-                self.ui.pkg_settings_install_source_rpm.setText('Remove') 
-            else:
-                self.webbrowser.remove_source_rpm()
-                self.ui.pkg_settings_install_source_rpm.setText('Install') 
+                #self.ui.pkg_settings_install_source_rpm.setText('Remove') 
+            #else:
+                #self.webbrowser.remove_source_rpm()
+                #self.ui.pkg_settings_install_source_rpm.setText('Install') 
 
 
     def __start_pkg_worker(self):

@@ -65,7 +65,11 @@ class WebBrowser:
         release = update['parsed_nvr']['release']
         architecture = platform.processor()
         full_name = "%s.%s" % (update['itemlist_name'], architecture)
-        os.system("su -c 'dnf update --enablerepo=updates-testing  %s'" % (full_name))
+        if os.geteuid()==0:
+            os.system("dnf update --enablerepo=updates-testing  %s -y" % (full_name))
+        else:
+            os.system("pkexec dnf update --enablerepo=updates-testing  %s -y" % (full_name))
+			
         
     # Remove rpm packages, inspirated by Fedora Draft Documentation    
     def remove_source_rpm(self):

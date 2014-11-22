@@ -333,22 +333,13 @@ class MainWindow(QtGui.QMainWindow):
         window.show()
 
     def __install_pkg_worker(self):
-        if not os.geteuid()==0:
-            message = "You must be root to run installation. Please, use sudo and try again."
-            self.ui.statusBar.showMessage(message)
-        else:
-            bodhi_update = self.get_bodhi_update()
-            if bodhi_update is None:
-                return
+        bodhi_update = self.get_bodhi_update()
+        if bodhi_update is None:
+            return
 
-            # Is rpm package installed?
-            if bodhi_update['itemlist_name'] not in self.installed_updates:
-                self.webbrowser.install_source_rpm()
-                #self.ui.pkg_settings_install_source_rpm.setText('Remove') 
-            #else:
-                #self.webbrowser.remove_source_rpm()
-                #self.ui.pkg_settings_install_source_rpm.setText('Install') 
-
+        # Is rpm package installed?
+        if bodhi_update['itemlist_name'] not in self.installed_updates:
+            self.webbrowser.install_source_rpm()
 
     def __start_pkg_worker(self):
         # Get release and put it to queue

@@ -454,7 +454,7 @@ class Ui_MainWindow(object):
         self.karmaBox.setItemIcon(1,QtGui.QIcon(":/karma-plain.png"))
         self.karmaBox.setItemText(2, QtGui.QApplication.translate("MainWindow", "-1", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaBox.setItemIcon(2,QtGui.QIcon(":/karma-crying.png"))
-        self.karmaBox.setIconSize(QtCore.QSize(27,27))
+        #self.karmaBox.setIconSize(QtCore.QSize(27,27))
         self.sendBtn.setText(QtGui.QApplication.translate("MainWindow", "Send Karma", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Your comment", None, QtGui.QApplication.UnicodeUTF8))
         self.treeWidget_feedback.setSortingEnabled(True)

@@ -307,6 +307,7 @@ class MainWindow(QtGui.QMainWindow):
     def set_installed_packages(self, packages):
         self.add_status_item(str(len(packages)) + " installed packages on system")
         for pkg in packages:
+            pkg.nvr = pkg.name + '-' + pkg.version + '-' + pkg.release
             self.__installed_packages[pkg.nvr] = pkg
         #self.__installed_packages = packages
 
@@ -588,13 +589,13 @@ class MainWindow(QtGui.QMainWindow):
                 yum_values['installed_timedelta'] = str(install_age.seconds / 60) + " minutes"
 
             # Calculate package size
-            if yum_pkg.packagesize > 1e6:
+            if yum_pkg.size > 1e6:
                 # It's better to display human readable number format
                 # for the package size, e.g. 1 M (as does $ yum info)
-                yum_values['size'] = "{:0.1f} M".format(round(yum_pkg.packagesize/1e6, 1))
+                yum_values['size'] = "{:0.1f} M".format(round(yum_pkg.size/1e6, 1))
             else:
-                yum_values['size'] = "{:0.1f} k".format(round(yum_pkg.packagesize/1e3, 1))
-            yum_values['repo'] = yum_pkg.repo
+                yum_values['size'] = "{:0.1f} k".format(round(yum_pkg.size/1e3, 1))
+            yum_values['repo'] = yum_pkg.reponame
             yum_values['from_repo'] = yum_pkg.ui_from_repo
             yum_values['summary'] = yum_pkg.summary
             yum_values['url'] = yum_pkg.url

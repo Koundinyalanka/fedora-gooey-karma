@@ -66,14 +66,14 @@ class BodhiWorker(QtCore.QThread):
 
                     # Is something from this package running?
                     ## Find package in installed packages
-                    for pkg in self.installed_packages:
-                        if pkg.name == bodhi_update['parsed_nvr']['name']:
+                    #for pkg in self.installed_packages:
+                        #if pkg.name == bodhi_update['parsed_nvr']['name']:
                             # Check for every process if it is in filelist
-                            for proc_name in self.process_list:
-                                if proc_name in pkg.filelist:
+                            #for proc_name in self.process_list:
+                                #if proc_name in pkg.filelist:
                                     # Append binary to list
-                                    bodhi_update['currently_running'].append(proc_name)
-                            break
+                                    #bodhi_update['currently_running'].append(proc_name)
+                            #break
 
                     # Send it to main thread
                     main_thread_call(self.main_thread.bodhi_process_result,
@@ -128,10 +128,12 @@ class BodhiWorker(QtCore.QThread):
                         # Which category is it?
                         category = 'others'
                         ## Search for desktop file
-                        for filename in installed_pkg.filelist:
-                            if re.search('^/usr/share/applications/(.*).desktop$', filename):
-                                category = 'desktop'
-                                break
+                        #for filename in installed_pkg.filelists:
+                            #if re.search('^/usr/share/applications/(.*).desktop$', filename):
+                                #category = 'desktop'
+                                #break
+
+                            
 
                         pkgs[category][name] = installed_pkg
         except IOError, e:
@@ -156,6 +158,7 @@ class BodhiWorker(QtCore.QThread):
             for update in pkg_update:
                 for build in update['builds']:
                     # Does this build match with our current build?
+                    package.nvr = package.name + '-' + package.version + '-' + package.release
                     if build['nvr'] == package.nvr:
                         update['itemlist_name'] = package.nvr
                         update['yum_package'] = package

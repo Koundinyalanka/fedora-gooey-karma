@@ -25,7 +25,6 @@ import os
 import re
 import sys
 import platform 
-#from gi.repository import GLib
 import urllib
 import time
 from PySide import QtCore
@@ -44,7 +43,6 @@ class DialogWindow(QtGui.QMainWindow):
 
         update = self.main.get_bodhi_update()
         name = update['itemlist_name']       
-        #path = u"%s" % (GLib.get_user_special_dir(GLib.USER_DIRECTORY_DOWNLOAD).decode('utf-8'))
         path = "%s" % (os.environ.get("XDG_DOWNLOAD_DIR", os.path.expanduser("~")))
         self.nameBox = QtGui.QGroupBox(self)  
         self.nameBox.setCheckable(False)
@@ -104,6 +102,7 @@ class DialogWindow(QtGui.QMainWindow):
         layout.addWidget(cancelBtn)
         layout.addWidget(saveBtn)
         self.setLayout(layout)
+        
         qr = self.frameGeometry()
         cp = QtGui.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
@@ -111,10 +110,10 @@ class DialogWindow(QtGui.QMainWindow):
         self.ProgressDialog = QtGui.QProgressDialog(self)
         self.ProgressDialog.setWindowTitle(self.tr("Downloading..."))
         self.ProgressDialog.setCancelButtonText(self.tr("Cancel"))
- 
         self.setWindowTitle("Download source RPM")
         
     def dlProgress(self,count, blockSize, totalSize):
+        # Progress bar of downloading packages
         self.ProgressDialog.setRange(0, totalSize)
         self.ProgressDialog.setValue(count*blockSize) 
         if count*blockSize >= totalSize:
@@ -124,6 +123,7 @@ class DialogWindow(QtGui.QMainWindow):
             self.ProgressDialog.close()		      
 
     def download_source_rpm(self):
+        # Download a package to the directory
         update = self.main.get_bodhi_update()
         if not update:
             return
@@ -137,14 +137,17 @@ class DialogWindow(QtGui.QMainWindow):
         urllib.urlretrieve("%s" % (url),"%s/%s" % (self.pathEdit.text(), self.nameEdit.text()), reporthook=self.dlProgress)
         
     def Cancel(self):
+        # Download dialog was closed
         self.close()
 		
     def Accept(self):
+        # Download dialog was confirmed
         self.download_source_rpm()
         self.ProgressDialog.hide()
         self.close()		
 		
     def openDirectoryDialog(self):
+        # Directory dialog for a change of path for downloading 
         flags = QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly
         directory = QtGui.QFileDialog.getExistingDirectory(self,"Choose Directory",os.getcwd(),flags)
         self.pathEdit.setText(directory)

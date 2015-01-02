@@ -45,7 +45,6 @@ from config import Config
 from toolbox import Toolbox
 from browser import WebBrowser
 from download_window import DialogWindow
-
 from idlequeuedispatcher import ThreadDispatcher
 from sendkarma import SendKarma
 

@@ -65,21 +65,13 @@ class WebBrowser:
         release = update['parsed_nvr']['release']
         architecture = platform.processor()
         full_name = "%s.%s" % (update['itemlist_name'], architecture)
+        # Is the user root? 
         if os.geteuid()==0:
+            # The user is root
             os.system("dnf update --enablerepo=updates-testing  %s -y" % (full_name))
         else:
+            # Non root, a password is required
             os.system("pkexec dnf update --enablerepo=updates-testing  %s -y" % (full_name))
-			
-        
-    # Remove rpm packages, inspirated by Fedora Draft Documentation    
-    def remove_source_rpm(self):
-        update = self.main.get_bodhi_update()
-        if not update:
-            return
-        architecture = platform.processor()
-        full_name = "%s.%s" % (update['itemlist_name'], architecture)
-        os.system('sudo rpm -e %s' % (full_name))
-
 
     def show_testcase_in_browser(self):
         testcase_name = self.main.ui.treeWidget_test_cases.currentItem().text(0).replace(' ', '_')

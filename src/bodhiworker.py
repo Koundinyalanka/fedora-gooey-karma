@@ -28,6 +28,7 @@ import subprocess
 from PySide import QtCore
 from fedora.client import BodhiClient
 from idlequeue import *
+import itertools
 
 class BodhiWorker(QtCore.QThread):
 
@@ -66,14 +67,12 @@ class BodhiWorker(QtCore.QThread):
 
                     # Is something from this package running?
                     ## Find package in installed packages
-                    #for pkg in self.installed_packages:
-                        #if pkg.name == bodhi_update['parsed_nvr']['name']:
-                            # Check for every process if it is in filelist
-                            #for proc_name in self.process_list:
-                                #if proc_name in pkg.filelist:
-                                    # Append binary to list
-                                    #bodhi_update['currently_running'].append(proc_name)
-                            #break
+                    pkg = self.installed_packages.filter(name=bodhi_update['parsed_nvr']['name'])
+                    fname2pkg = {fname: pkg.filter(file=fname) for fname in self.process_list}                            
+                    # Append binary to list 
+                    for key in fname2pkg.iteritems():
+                        bodhi_update['currently_running'].append(key[0]) 
+                        break            
 
                     # Send it to main thread
                     main_thread_call(self.main_thread.bodhi_process_result,
@@ -122,20 +121,18 @@ class BodhiWorker(QtCore.QThread):
                                  stderr=subprocess.STDOUT)
 
             for line in p.stdout.readlines():
-                name = line.lstrip().rstrip()
-                for installed_pkg in self.installed_packages:
-                    if installed_pkg.name == name:
-                        # Which category is it?
-                        category = 'others'
-                        ## Search for desktop file
-                        #for filename in installed_pkg.filelists:
-                            #if re.search('^/usr/share/applications/(.*).desktop$', filename):
-                                #category = 'desktop'
-                                #break
-
-                            
-
-                        pkgs[category][name] = installed_pkg
+                name = line.strip()
+                installed_pkg = self.installed_packages.filter(name=name)
+                # Which category is it?
+                category = 'others'
+                ## Search for desktop file
+                desktop_pkg = [filename for filename in itertools.chain.from_iterable(installed_pkg)
+                if re.search('^/usr/share/applications/(.*).desktop$', filename)]
+                if desktop_pkg!=[]: 
+                    category = 'desktop'
+                    break
+						
+                pkgs[category][name] = installed_pkg
         except IOError, e:
             print "BodhiWorker.__get_relevant_packages: %s" % str(e)
 

@@ -66,7 +66,7 @@ class PackagesWorker(QtCore.QThread):
             self.yb.conf.cachedir = cachedir
             self.yb.conf.releasever = dnf.rpm.detect_releasever(self.yb.conf.installroot)
             self.yb.read_all_repos()
-            sack = self.yb.fill_sack()
+            self.yb.fill_sack()
             self.q = self.yb.sack.query()
             self.q = self.q.installed()
             self.installed_packages = self.q 

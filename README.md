@@ -1,6 +1,6 @@
 # Fedora Gooey Karma
 
-fedora-gooey-karma provides similar functionality to the fedora-easy-karma via GUI. It also currently provides some extra info like: yum info, bodhi info, test cases, bugs.
+fedora-gooey-karma provides similar functionality to the fedora-easy-karma via GUI. It also currently provides some extra info like: dnf info, bodhi info, test cases, bugs.
 
 ## Based on
 
@@ -11,8 +11,7 @@ fedora-gooey-karma provides similar functionality to the fedora-easy-karma via G
 
     python-fedora
     fedora-cert
-    yum
-    yum-utils
+    dnf
     bodhi-client
     python-pyside
     python-keyring
@@ -20,7 +19,7 @@ fedora-gooey-karma provides similar functionality to the fedora-easy-karma via G
     
 To install these dependencies, use this command:
 
-    yum install python-fedora fedora-cert yum yum-utils bodhi-client python-pyside python-keyring koji
+    dnf install python-fedora fedora-cert bodhi-client python-pyside python-keyring koji
     
 ## Installation and usage
 

@@ -60,7 +60,7 @@ class PackagesWorker(QtCore.QThread):
             self.queue.task_done()
 
     def load_installed(self, releasever):
-        # Load from yum rpmdb all installed packages
+        # Load from dnf rpmdb all installed packages
         with dnf.Base() as self.yb:
             cachedir = getCacheDir()
             self.yb.conf.cachedir = cachedir

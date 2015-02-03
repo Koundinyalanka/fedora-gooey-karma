@@ -68,11 +68,10 @@ class BodhiWorker(QtCore.QThread):
                     # Is something from this package running?
                     ## Find package in installed packages
                     pkg = self.installed_packages.filter(name=bodhi_update['parsed_nvr']['name'])
-                    fname2pkg = {fname: pkg.filter(file=fname) for fname in self.process_list}                            
+                    fname2pkg = {fname: pkg.filter(file=fname) for fname in self.process_list if re.search(pkg[0].name, fname)} 
                     # Append binary to list 
                     for key in fname2pkg.iteritems():
-                        bodhi_update['currently_running'].append(key[0]) 
-                        break            
+                        bodhi_update['currently_running'].append(key[0])            
 
                     # Send it to main thread
                     main_thread_call(self.main_thread.bodhi_process_result,
@@ -122,17 +121,18 @@ class BodhiWorker(QtCore.QThread):
 
             for line in p.stdout.readlines():
                 name = line.strip()
-                installed_pkg = self.installed_packages.filter(name=name)
-                # Which category is it?
-                category = 'others'
-                ## Search for desktop file
-                desktop_pkg = [filename for filename in itertools.chain.from_iterable(installed_pkg)
-                if re.search('^/usr/share/applications/(.*).desktop$', filename)]
-                if desktop_pkg!=[]: 
-                    category = 'desktop'
-                    break
+                for installed_pkg in self.installed_packages:
+                    if installed_pkg.name == name:
+                        # Which category is it?
+                        category = 'others'
+                        ## Search for desktop file
+                        desktop_pkg = [filename for filename in itertools.chain.from_iterable(installed_pkg)
+                        if re.search('^/usr/share/applications/(.*).desktop$', filename)]
+                        if desktop_pkg!=[]: 
+                            category = 'desktop'
+                            break
 						
-                pkgs[category][name] = installed_pkg
+                        pkgs[category][name] = installed_pkg
         except IOError, e:
             print "BodhiWorker.__get_relevant_packages: %s" % str(e)
 
@@ -158,13 +158,13 @@ class BodhiWorker(QtCore.QThread):
                     package.nvr = package.name + '-' + package.version + '-' + package.release
                     if build['nvr'] == package.nvr:
                         update['itemlist_name'] = package.nvr
-                        update['yum_package'] = package
+                        update['dnf_package'] = package
                         update['variant'] = 'installed'
                         return ['installed', update]
                     # If not, there could be newer version
                     elif build.package.name == package.name:
                         update['itemlist_name'] = build['nvr']
-                        update['yum_package'] = build.package
+                        update['dnf_package'] = build.package
                         update['variant'] = 'available'
                         return ['available', update]
 

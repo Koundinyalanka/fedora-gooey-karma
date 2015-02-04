@@ -50,7 +50,7 @@ from sendkarma import SendKarma
 
 class MainWindow(QtGui.QMainWindow):
 
-    __FEDORA_RELEASES = ['Fedora 19', 'Fedora 18', 'Fedora 17']
+    __FEDORA_RELEASES = ['Fedora 20', 'Fedora 19', 'Fedora 18', 'Fedora 17']
     __BODHI_WORKERS_COUNT = 15
 
     def __init__(self, parent=None):

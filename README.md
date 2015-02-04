@@ -16,10 +16,11 @@ fedora-gooey-karma provides similar functionality to the fedora-easy-karma via G
     python-pyside
     python-keyring
     koji
+    PyQt4
     
 To install these dependencies, use this command:
 
-    dnf install python-fedora fedora-cert bodhi-client python-pyside python-keyring koji
+    dnf install python-fedora fedora-cert bodhi-client python-pyside python-keyring koji PyQt4
     
 ## Installation and usage
 

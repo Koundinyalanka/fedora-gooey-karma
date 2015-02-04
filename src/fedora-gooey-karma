@@ -69,8 +69,8 @@ class MainWindow(QtGui.QMainWindow):
         self.available_updates = {}
         self.__process_list = []
 
-        # Config
-        self.config = Config()
+        # Config 
+        self.config = Config(self)
         ## Set fas username and password to widget
         self.ui.usernameEdit.setText(self.config.get_fas_name())
         self.ui.passwordEdit.setText(self.config.get_fas_password())

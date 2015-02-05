@@ -119,17 +119,16 @@ class BodhiWorker(QtCore.QThread):
                                  stderr=subprocess.STDOUT)
 
             for line in p.stdout.readlines():
-                name2 = line.strip()
-                installed_pkg = self.installed_packages.filter(name=name2)
-                    #if installed_pkg.name == name:
-                        # Which category is it?
+                pkg_name = line.strip()
+                installed_pkg = self.installed_packages.filter(name=pkg_name)
+                # Which category is it?
                 category = 'others'
                 desktop_pkg = installed_pkg.filter(file='^/usr/share/applications/(.*).desktop$')    
                 if desktop_pkg!=[]: 
                     category = 'desktop'
                     break
 						
-                pkgs[category][name2] = installed_pkg
+                pkgs[category][pkg_name] = installed_pkg
         except IOError, e:
             print "BodhiWorker.__get_relevant_packages: %s" % str(e)
 

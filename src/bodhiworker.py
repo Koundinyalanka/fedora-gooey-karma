@@ -28,7 +28,6 @@ import subprocess
 from PySide import QtCore
 from fedora.client import BodhiClient
 from idlequeue import *
-import itertools
 
 class BodhiWorker(QtCore.QThread):
 
@@ -125,9 +124,7 @@ class BodhiWorker(QtCore.QThread):
                     if installed_pkg.name == name:
                         # Which category is it?
                         category = 'others'
-                        ## Search for desktop file
-                        desktop_pkg = [filename for filename in itertools.chain.from_iterable(installed_pkg)
-                        if re.search('^/usr/share/applications/(.*).desktop$', filename)]
+                        desktop_pkg = (installed_pkg.filter(file=filename) for filename in installed_pkg if re.search('^/usr/share/applications/(.*).desktop$', filename))    
                         if desktop_pkg!=[]: 
                             category = 'desktop'
                             break

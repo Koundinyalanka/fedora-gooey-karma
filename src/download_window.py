@@ -24,7 +24,6 @@
 import os
 import re
 import sys
-import platform 
 import urllib
 import time
 from PySide import QtCore

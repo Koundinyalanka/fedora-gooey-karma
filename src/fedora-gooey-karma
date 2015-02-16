@@ -25,18 +25,14 @@
 import os
 import re
 import sys
-import platform 
-import getpass
 
 sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../share/fedora-gooey-karma'))
 
 import Queue
 import rpm
 import datetime
-import koji
 from PySide import QtCore
 from PySide import QtGui
-import qrc_resources
 from customgui import CustomTreeWidgetItem
 from mainwindow_gui import Ui_MainWindow
 from packagesworker import PackagesWorker
@@ -523,9 +519,9 @@ class MainWindow(QtGui.QMainWindow):
 
         # Set Install Button
         if bodhi_update['itemlist_name'] in self.installed_updates:
-            self.ui.pkg_settings_install_source_rpm.setText('Remove')
+            self.ui.pkg_settings_install_source_rpm.setVisible(False)
         else:
-            self.ui.pkg_settings_install_source_rpm.setText('Install') 
+            self.ui.pkg_settings_install_source_rpm.setVisible(True) 
 
         # Show tab if not here
         self.ui.tabWidget.addTab(self.__tabBar_info_backup, 'Update: ' + bodhi_update['itemlist_name'])

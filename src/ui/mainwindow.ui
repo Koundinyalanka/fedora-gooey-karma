@@ -61,7 +61,7 @@
                  <string>Clear search</string>
                 </property>
                 <property name="text">
-                 <string>X</string>
+                 <string>Clear</string>
                 </property>
                </widget>
               </item>
@@ -609,7 +609,7 @@ p, li { white-space: pre-wrap; }
                     </property>
                     <item>
                      <property name="text">
-                      <string>-1</string>
+                      <string>+1</string>
                      </property>
                     </item>
                     <item>
@@ -619,7 +619,7 @@ p, li { white-space: pre-wrap; }
                     </item>
                     <item>
                      <property name="text">
-                      <string>+1</string>
+                      <string>-1</string>
                      </property>
                     </item>
                    </widget>
@@ -633,6 +633,18 @@ p, li { white-space: pre-wrap; }
                   </item>
                  </layout>
                 </item>
+                
+                <item>	  
+					<widget class="QCheckBox" name="fasCheckBox">
+					<property name="text">
+					<string>Keep me signed in</string>
+					</property>
+					<property name="checked">
+					<bool>true</bool>
+					</property>
+					</widget>
+				</item>
+                
                 <item>
                  <widget class="QLabel" name="label_2">
                   <property name="font">

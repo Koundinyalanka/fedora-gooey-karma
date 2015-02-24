@@ -31,10 +31,8 @@ sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../share/fedora-gooe
 import Queue
 import rpm
 import datetime
-import koji
 from PySide import QtCore
 from PySide import QtGui
-
 from customgui import CustomTreeWidgetItem
 from mainwindow_gui import Ui_MainWindow
 from packagesworker import PackagesWorker
@@ -42,13 +40,13 @@ from bodhiworker import BodhiWorker
 from config import Config
 from toolbox import Toolbox
 from browser import WebBrowser
-
+from download_window import DialogWindow
 from idlequeuedispatcher import ThreadDispatcher
 from sendkarma import SendKarma
 
 class MainWindow(QtGui.QMainWindow):
 
-    __FEDORA_RELEASES = ['Fedora 19', 'Fedora 18', 'Fedora 17']
+    __FEDORA_RELEASES = ['Fedora 20', 'Fedora 19', 'Fedora 18', 'Fedora 17']
     __BODHI_WORKERS_COUNT = 15
 
     def __init__(self, parent=None):
@@ -67,8 +65,8 @@ class MainWindow(QtGui.QMainWindow):
         self.available_updates = {}
         self.__process_list = []
 
-        # Config
-        self.config = Config()
+        # Config 
+        self.config = Config(self)
         ## Set fas username and password to widget
         self.ui.usernameEdit.setText(self.config.get_fas_name())
         self.ui.passwordEdit.setText(self.config.get_fas_password())
@@ -125,7 +123,8 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.tabWidget_side.currentChanged.connect(self.__tabside_changed)
         ## Package settings
         self.ui.pkg_settings_open_bodhi_update.clicked.connect(self.webbrowser.show_bodhi_update_in_browser, QtCore.Qt.QueuedConnection)
-        self.ui.pkg_settings_download_source_rpm.clicked.connect(self.webbrowser.download_source_rpm, QtCore.Qt.QueuedConnection)
+        self.ui.pkg_settings_download_source_rpm.clicked.connect(self.__download_pkg_worker, QtCore.Qt.QueuedConnection)
+        self.ui.pkg_settings_install_source_rpm.clicked.connect(self. __install_pkg_worker, QtCore.Qt.QueuedConnection)
         self.ui.settings_pkg_cat_normal.toggled.connect(self.__set_pkg_category, QtCore.Qt.QueuedConnection)
         self.ui.settings_pkg_cat_favorite.toggled.connect(self.__set_pkg_category, QtCore.Qt.QueuedConnection)
         self.ui.settings_pkg_cat_ignored.toggled.connect(self.__set_pkg_category, QtCore.Qt.QueuedConnection)
@@ -201,12 +200,14 @@ class MainWindow(QtGui.QMainWindow):
 
     def __show_message_box_about(self):
         text = (
+            #"<img src='icons/256x256/apps/fedora-gooey-karma' align='right' width='128' height='128'><br>"
+            "<img src=':/fedora-gooey-karma.png' align='right' width='128' height='128'><br>"
             "<b>Fedora Gooey Karma</b> is a tool for browsing installed packages from updates-testing repository.<br><br>"
             "You can easily add karma comment, open bugs attached to new build and more.<br><br>"
             "Please feel free to <a href=\"https://github.com/blaskovic/fedora-gooey-karma/issues\">report any issues</a> and "
             "visit <a href=\"https://github.com/blaskovic/fedora-gooey-karma\">homepage</a> of Fedora Gooey Karma.<br><br>"
-            "<b>Authors:</b><br>"
-            "<ul><li>Branislav Blaskovic</li><li>Tomas Meszaros</li></ul>"
+            "<b>Authors:</b>"
+            "<ul><li>Branislav Blaskovic</li><li>Tomas Meszaros</li><li>Dominika Regeciova</li></ul>"
         )
         QtGui.QMessageBox.about(QtGui.QApplication.activeWindow(), "Fedora Gooey Karma", text)
 
@@ -301,6 +302,7 @@ class MainWindow(QtGui.QMainWindow):
     def set_installed_packages(self, packages):
         self.add_status_item(str(len(packages)) + " installed packages on system")
         for pkg in packages:
+            pkg.nvr = pkg.name + '-' + pkg.version + '-' + pkg.release
             self.__installed_packages[pkg.nvr] = pkg
         #self.__installed_packages = packages
 
@@ -320,6 +322,20 @@ class MainWindow(QtGui.QMainWindow):
                 continue
 
             self.ui.releaseComboBox.addItem(release)
+
+    def __download_pkg_worker(self):
+        window = DialogWindow(self)
+        window.resize(500,200)
+        window.show()
+
+    def __install_pkg_worker(self):
+        bodhi_update = self.get_bodhi_update()
+        if bodhi_update is None:
+            return
+
+        # Is rpm package installed?
+        if bodhi_update['itemlist_name'] not in self.installed_updates:
+            self.webbrowser.install_source_rpm()
 
     def __start_pkg_worker(self):
         # Get release and put it to queue
@@ -501,6 +517,12 @@ class MainWindow(QtGui.QMainWindow):
 
         self.__selected_pkglist_item = bodhi_update
 
+        # Set Install Button
+        if bodhi_update['itemlist_name'] in self.installed_updates:
+            self.ui.pkg_settings_install_source_rpm.setVisible(False)
+        else:
+            self.ui.pkg_settings_install_source_rpm.setVisible(True) 
+
         # Show tab if not here
         self.ui.tabWidget.addTab(self.__tabBar_info_backup, 'Update: ' + bodhi_update['itemlist_name'])
 
@@ -513,10 +535,10 @@ class MainWindow(QtGui.QMainWindow):
         # Fill in toolbox Add package line edit
         self.ui.tool_pkg_name.setText(bodhi_update['parsed_nvr']['name'])
 
-        ## yum info
-        yum_values = {}
-        yum_format_string = (
-            "<b>Yum Info %(installed_version)s</b>\n"
+        ## dnf info
+        dnf_values = {}
+        dnf_format_string = (
+            "<b>Dnf Info %(installed_version)s</b>\n"
             "<b>           Name:</b> %(name)s\n"
             "<b>      Installed:</b> %(installed_timedelta)s ago\n"
             "<b>           Arch:</b> %(arch)s\n"
@@ -531,57 +553,57 @@ class MainWindow(QtGui.QMainWindow):
             "\n\n"
         )
 
-        # Grab yum info from installed package
+        # Grab dnf info from installed package
         if bodhi_update.variant == 'installed':
-            yum_pkg = bodhi_update.yum_package
+            dnf_pkg = bodhi_update.dnf_package
         elif bodhi_update.variant == 'available':
             # Search for package
             for key in self.__installed_packages.keys():
-                if self.__installed_packages[key].name == bodhi_update.yum_package.name:
-                    yum_pkg = self.__installed_packages[key]
+                if self.__installed_packages[key].name == bodhi_update.dnf_package.name:
+                    dnf_pkg = self.__installed_packages[key]
                     break
         else:
-            yum_pkg = None
+            dnf_pkg = None
 
-        if yum_pkg is not None:
-            # If we got yum package
-            # fetch info from yum_pkg
-            yum_values['name'] = yum_pkg.name
-            yum_values['arch'] = yum_pkg.arch
-            yum_values['version'] = yum_pkg.version
-            yum_values['release'] = yum_pkg.release
+        if dnf_pkg is not None:
+            # If we got dnf package
+            # fetch info from dnf_pkg
+            dnf_values['name'] = dnf_pkg.name
+            dnf_values['arch'] = dnf_pkg.arch
+            dnf_values['version'] = dnf_pkg.version
+            dnf_values['release'] = dnf_pkg.release
 
             # Calculate install time
             now = datetime.datetime.now()
-            install_age=(now - datetime.datetime.fromtimestamp(yum_pkg.installtime))
+            install_age=(now - datetime.datetime.fromtimestamp(dnf_pkg.installtime))
             if install_age.days > 0:
-                yum_values['installed_timedelta'] = str(install_age.days) + " days"
+                dnf_values['installed_timedelta'] = str(install_age.days) + " days"
             elif install_age.seconds / 60 / 60 > 2:
-                yum_values['installed_timedelta'] = str(install_age.seconds / 60 / 60) + " hours"
+                dnf_values['installed_timedelta'] = str(install_age.seconds / 60 / 60) + " hours"
             else:
-                yum_values['installed_timedelta'] = str(install_age.seconds / 60) + " minutes"
+                dnf_values['installed_timedelta'] = str(install_age.seconds / 60) + " minutes"
 
             # Calculate package size
-            if yum_pkg.packagesize > 1e6:
+            if dnf_pkg.size > 1e6:
                 # It's better to display human readable number format
-                # for the package size, e.g. 1 M (as does $ yum info)
-                yum_values['size'] = "{:0.1f} M".format(round(yum_pkg.packagesize/1e6, 1))
+                # for the package size, e.g. 1 M (as does $ dnf info)
+                dnf_values['size'] = "{:0.1f} M".format(round(dnf_pkg.size/1e6, 1))
             else:
-                yum_values['size'] = "{:0.1f} k".format(round(yum_pkg.packagesize/1e3, 1))
-            yum_values['repo'] = yum_pkg.repo
-            yum_values['from_repo'] = yum_pkg.ui_from_repo
-            yum_values['summary'] = yum_pkg.summary
-            yum_values['url'] = yum_pkg.url
-            yum_values['license'] = yum_pkg.license
-            yum_values['description'] = yum_pkg.description
-            yum_values['installed_version'] = ''
+                dnf_values['size'] = "{:0.1f} k".format(round(dnf_pkg.size/1e3, 1))
+            dnf_values['repo'] = dnf_pkg.reponame
+            dnf_values['from_repo'] = dnf_pkg.ui_from_repo
+            dnf_values['summary'] = dnf_pkg.summary
+            dnf_values['url'] = dnf_pkg.url
+            dnf_values['license'] = dnf_pkg.license
+            dnf_values['description'] = dnf_pkg.description
+            dnf_values['installed_version'] = ''
             if bodhi_update.variant == 'available':
-                yum_values['installed_version'] = '(installed version)'
-            # Decode all strings found in yum_values to utf-8
-            self.__decode_dict(yum_values)
-            # Map fetched yum info on the yum_format_string
+                dnf_values['installed_version'] = '(installed version)'
+            # Decode all strings found in dnf_values to utf-8
+            self.__decode_dict(dnf_values)
+            # Map fetched dnf info on the dnf_format_string
             # Add to the final browser string
-            text_browser_string += yum_format_string % yum_values
+            text_browser_string += dnf_format_string % dnf_values
 
             ## Related packages
             self.ui.treeWidget_related_packages.clear()
@@ -595,7 +617,8 @@ class MainWindow(QtGui.QMainWindow):
             for key in bodhi_update['relevant_packages']['others'].keys():
                 rel_pkg = bodhi_update['relevant_packages']['others'][key]
                 pkg = QtGui.QTreeWidgetItem()
-                pkg.setText(0, str(rel_pkg.name))
+                print key
+                #pkg.setText(0, str(rel_pkg.name))
                 pkg.setToolTip(0, rel_pkg.description)
                 item_others.insertChild(0, pkg)
 
@@ -669,11 +692,11 @@ class MainWindow(QtGui.QMainWindow):
 
         # First descriptions
         descriptions_values = {}
-        descriptions_values['yum_description'] = yum_values['description']
+        descriptions_values['dnf_description'] = dnf_values['description']
         descriptions_values['bodhi_notes'] = bodhi_values['notes'].replace('\n', '<br>')
         text_browser_descriptions = (
-            "<b>Yum description</b></pre>"
-            "%(yum_description)s<pre>\n\n"
+            "<b>Dnf description</b></pre>"
+            "%(dnf_description)s<pre>\n\n"
             "<b>Bodhi update notes</b></pre>"
             "%(bodhi_notes)s<pre>\n\n"
         )

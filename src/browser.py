@@ -21,6 +21,10 @@
 #    Author: Branislav Blaskovic <branislav@blaskovic.sk>
 
 import webbrowser
+import platform
+import rpm
+import os
+import urllib
 
 class WebBrowser:
 
@@ -51,19 +55,23 @@ class WebBrowser:
             return
         webbrowser.open_new_tab(update['bodhi_url'])
 
-    def download_source_rpm(self):
+    # Install rpm packages, inspirated by Fedora Draft Documentation    
+    def install_source_rpm(self):
         update = self.main.get_bodhi_update()
         if not update:
             return
-
         name = update['parsed_nvr']['name']
         version = update['parsed_nvr']['version']
         release = update['parsed_nvr']['release']
-
-        # Set-up url
-        url = self.__KOJI_PACKAGES_URL + "%s/%s/%s/src/%s.src.rpm" % (name, version, release, update['itemlist_name'])
-        # Maybe it would be nice to show Save dialog and save directly to hdd
-        webbrowser.open_new_tab(url)
+        architecture = platform.processor()
+        full_name = "%s.%s" % (update['itemlist_name'], architecture)
+        # Is the user root? 
+        if os.geteuid()==0:
+            # The user is root
+            os.system("dnf update --enablerepo=updates-testing  %s -y" % (full_name))
+        else:
+            # Non root, a password is required
+            os.system("pkexec dnf update --enablerepo=updates-testing  %s -y" % (full_name))
 
     def show_testcase_in_browser(self):
         testcase_name = self.main.ui.treeWidget_test_cases.currentItem().text(0).replace(' ', '_')

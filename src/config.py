@@ -83,7 +83,8 @@ class Config:
 
     __KEYRING_SERVICE_NAME = 'fedora-gooey-karma-login'
 
-    def __init__(self):
+    def __init__(self, main):
+        self.main = main
         self.__config_file = None
         try:  
             self.__config_file = os.environ["HOME"] + "/.fedora-gooey-karma"
@@ -155,11 +156,11 @@ class Config:
         self.__fas_password = pass_backup
 
         # Save password to keyring (if set)
-        try:
-            if self.__fas_password != '' and self.fas_name != '':
+        if self.main.ui.fasCheckBox.isChecked() and self.__fas_password != '' and self.fas_name != '':
+            try:
                 keyring.set_password(self.__KEYRING_SERVICE_NAME, str(self.fas_name), str(self.__fas_password))
-        except:
-            print "Error in save_config() while saving FAS token to keyring."
+            except:
+                print "Error in save_config() while saving FAS token to keyring."
 
 
 

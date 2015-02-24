@@ -57,7 +57,7 @@ class SendKarma(threading.Thread):
 
                 # Reload bodhi update
                 main_thread_call(self.main_thread.bodhi_workers_queue.put,
-                         ['package_update', self.package['yum_package']])
+                         ['package_update', self.package['dnf_package']])
                 # Clean up after sending
                 main_thread_call(self.main_thread.sending_done, self.username, self.password)
                 return

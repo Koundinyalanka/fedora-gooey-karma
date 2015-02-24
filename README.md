@@ -1,6 +1,6 @@
 # Fedora Gooey Karma
 
-fedora-gooey-karma provides similar functionality to the fedora-easy-karma via GUI. It also currently provides some extra info like: yum info, bodhi info, test cases, bugs.
+fedora-gooey-karma provides similar functionality to the fedora-easy-karma via GUI. It also currently provides some extra info like: dnf info, bodhi info, test cases, bugs.
 
 ## Based on
 
@@ -11,22 +11,22 @@ fedora-gooey-karma provides similar functionality to the fedora-easy-karma via G
 
     python-fedora
     fedora-cert
-    yum
-    yum-utils
+    dnf
     bodhi-client
     python-pyside
     python-keyring
     koji
+    PyQt4
     
 To install these dependencies, use this command:
 
-    yum install python-fedora fedora-cert yum yum-utils bodhi-client python-pyside python-keyring koji
+    dnf install python-fedora fedora-cert bodhi-client python-pyside python-keyring koji PyQt4
     
 ## Installation and usage
 
 ### Clone the repo
     
-    git clone https://github.com/blaskovic/fedora-gooey-karma.git
+    git clone https://github.com/regeciovad/fedora-gooey-karma.git
     cd fedora-gooey-karma
     
 ### Run the application
@@ -55,6 +55,7 @@ Please review this script before to adjust paths of rpmbuild and so.
     
     Branislav Blaskovic <branislav@blaskovic.sk>
     Tomas Meszaros <exo@tty.sk>
+    Dominika Regeciova <regeciovad@gmail.com>
     
 ## Blog
 

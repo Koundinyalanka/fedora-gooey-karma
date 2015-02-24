@@ -8,6 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PySide import QtCore, QtGui
+import qrc_resources
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -20,7 +21,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4 = QtGui.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.pkgLists = QtGui.QWidget(self.centralwidget)
-        self.pkgLists.setMaximumSize(QtCore.QSize(250, 16777215))
+        self.pkgLists.setMaximumSize(QtCore.QSize(300, 16777215))
         self.pkgLists.setObjectName("pkgLists")
         self.verticalLayout = QtGui.QVBoxLayout(self.pkgLists)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -283,6 +284,12 @@ class Ui_MainWindow(object):
         self.sendBtn.setObjectName("sendBtn")
         self.horizontalLayout_8.addWidget(self.sendBtn)
         self.verticalLayout_2.addLayout(self.horizontalLayout_8)
+                
+        self.fasCheckBox = QtGui.QCheckBox(self.groupBox)
+        self.fasCheckBox.setChecked(True)
+        self.fasCheckBox.setObjectName("fasCheckBox")
+        self.verticalLayout_2.addWidget(self.fasCheckBox)
+        
         self.label_2 = QtGui.QLabel(self.tabPkg_karma)
         font = QtGui.QFont()
         font.setPointSize(16)
@@ -315,23 +322,27 @@ class Ui_MainWindow(object):
         self.formLayout.setObjectName("formLayout")
         self.label_7 = QtGui.QLabel(self.tabPkg_settings)
         self.label_7.setObjectName("label_7")
-        self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.label_7)
+        self.formLayout.setWidget(6, QtGui.QFormLayout.LabelRole, self.label_7)
         self.settings_pkg_cat_normal = QtGui.QRadioButton(self.tabPkg_settings)
         self.settings_pkg_cat_normal.setChecked(True)
         self.settings_pkg_cat_normal.setObjectName("settings_pkg_cat_normal")
-        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.settings_pkg_cat_normal)
+        self.formLayout.setWidget(6, QtGui.QFormLayout.FieldRole, self.settings_pkg_cat_normal)
         self.settings_pkg_cat_favorite = QtGui.QRadioButton(self.tabPkg_settings)
         self.settings_pkg_cat_favorite.setObjectName("settings_pkg_cat_favorite")
-        self.formLayout.setWidget(6, QtGui.QFormLayout.FieldRole, self.settings_pkg_cat_favorite)
+        self.formLayout.setWidget(7, QtGui.QFormLayout.FieldRole, self.settings_pkg_cat_favorite)
         self.settings_pkg_cat_ignored = QtGui.QRadioButton(self.tabPkg_settings)
         self.settings_pkg_cat_ignored.setObjectName("settings_pkg_cat_ignored")
-        self.formLayout.setWidget(7, QtGui.QFormLayout.FieldRole, self.settings_pkg_cat_ignored)
+        self.formLayout.setWidget(8, QtGui.QFormLayout.FieldRole, self.settings_pkg_cat_ignored)
         self.pkg_settings_open_bodhi_update = QtGui.QPushButton(self.tabPkg_settings)
         self.pkg_settings_open_bodhi_update.setObjectName("pkg_settings_open_bodhi_update")
         self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.pkg_settings_open_bodhi_update)
         self.pkg_settings_download_source_rpm = QtGui.QPushButton(self.tabPkg_settings)
         self.pkg_settings_download_source_rpm.setObjectName("pkg_settings_download_source_rpm")
         self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.pkg_settings_download_source_rpm)
+        
+        self.pkg_settings_install_source_rpm = QtGui.QPushButton(self.tabPkg_settings)
+        self.pkg_settings_install_source_rpm.setObjectName("pkg_settings_install_source_rpm")
+        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.pkg_settings_install_source_rpm)
         self.label_8 = QtGui.QLabel(self.tabPkg_settings)
         self.label_8.setObjectName("label_8")
         self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.label_8)
@@ -393,8 +404,9 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Filter", None, QtGui.QApplication.UnicodeUTF8))
         self.searchEdit.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "Search packages...", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setToolTip(QtGui.QApplication.translate("MainWindow", "Clear search", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "X", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaCheckBox.setText(QtGui.QApplication.translate("MainWindow", "User filter", None, QtGui.QApplication.UnicodeUTF8))
+        self.fasCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Keep me signed in", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaFilterUserCombo.setItemText(0, QtGui.QApplication.translate("MainWindow", "Karma not submitted by user", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaFilterUserCombo.setItemText(1, QtGui.QApplication.translate("MainWindow", "Karma submitted by user", None, QtGui.QApplication.UnicodeUTF8))
         self.karmaUsernameEdit.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "username for karma filter", None, QtGui.QApplication.UnicodeUTF8))
@@ -408,9 +420,9 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Welcome to<span style=\" font-weight:600;\"> Fedora Gooey Karma</span> tool which helps you with testing new updates for your Fedora.</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">To load updates, press lower-left <span style=\" font-weight:600;\">Reload packages</span> button. If you are not sure what you should test, wait until all packages are loaded and see sections below this text.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">To load updates, press lower-left <span style=\" font-weight:600;\">Reload packages</span> button. If you are not sure what you should test, wait until all packages are loaded and see the list of packages to test on the left side.<br /></p>\nBelow this text you can find updates with negative karma and currently running applications.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBoxWhatToTest.setItemText(self.toolBoxWhatToTest.indexOf(self.toolBoxWelcome), QtGui.QApplication.translate("MainWindow", "Fedora Gooey Karma", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "It would be nice to re-test updates which has got negative karma. See these packages below.", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "It would be nice to re-test updates which has got negative karma.<br>See these packages below.", None, QtGui.QApplication.UnicodeUTF8))
         self.tool_pkg_list_negative.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Package", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBoxWhatToTest.setItemText(self.toolBoxWhatToTest.indexOf(self.toolBoxNegativeKarma), QtGui.QApplication.translate("MainWindow", "Updates with negative karma", None, QtGui.QApplication.UnicodeUTF8))
         self.tool_pkg_list_running.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Package", None, QtGui.QApplication.UnicodeUTF8))
@@ -436,9 +448,12 @@ class Ui_MainWindow(object):
         self.label.setText(QtGui.QApplication.translate("MainWindow", "FAS credentials", None, QtGui.QApplication.UnicodeUTF8))
         self.usernameEdit.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "username", None, QtGui.QApplication.UnicodeUTF8))
         self.passwordEdit.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "password", None, QtGui.QApplication.UnicodeUTF8))
-        self.karmaBox.setItemText(0, QtGui.QApplication.translate("MainWindow", "-1", None, QtGui.QApplication.UnicodeUTF8))
+        self.karmaBox.setItemText(0, QtGui.QApplication.translate("MainWindow", "+1", None, QtGui.QApplication.UnicodeUTF8))
+        self.karmaBox.setItemIcon(0,QtGui.QIcon(":/karma-angel.png"))
         self.karmaBox.setItemText(1, QtGui.QApplication.translate("MainWindow", "0", None, QtGui.QApplication.UnicodeUTF8))
-        self.karmaBox.setItemText(2, QtGui.QApplication.translate("MainWindow", "+1", None, QtGui.QApplication.UnicodeUTF8))
+        self.karmaBox.setItemIcon(1,QtGui.QIcon(":/karma-plain.png"))
+        self.karmaBox.setItemText(2, QtGui.QApplication.translate("MainWindow", "-1", None, QtGui.QApplication.UnicodeUTF8))
+        self.karmaBox.setItemIcon(2,QtGui.QIcon(":/karma-crying.png"))
         self.sendBtn.setText(QtGui.QApplication.translate("MainWindow", "Send Karma", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Your comment", None, QtGui.QApplication.UnicodeUTF8))
         self.treeWidget_feedback.setSortingEnabled(True)
@@ -453,6 +468,7 @@ class Ui_MainWindow(object):
         self.settings_pkg_cat_ignored.setText(QtGui.QApplication.translate("MainWindow", "Ignore this package", None, QtGui.QApplication.UnicodeUTF8))
         self.pkg_settings_open_bodhi_update.setText(QtGui.QApplication.translate("MainWindow", "Open bodhi update in web browser", None, QtGui.QApplication.UnicodeUTF8))
         self.pkg_settings_download_source_rpm.setText(QtGui.QApplication.translate("MainWindow", "Download source RPM", None, QtGui.QApplication.UnicodeUTF8))
+        self.pkg_settings_install_source_rpm.setText(QtGui.QApplication.translate("MainWindow", "Install", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("MainWindow", "Tools", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_side.setTabText(self.tabWidget_side.indexOf(self.tabPkg_settings), QtGui.QApplication.translate("MainWindow", "Settings", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.TabInfo), QtGui.QApplication.translate("MainWindow", "Package info", None, QtGui.QApplication.UnicodeUTF8))
@@ -461,5 +477,5 @@ class Ui_MainWindow(object):
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About Fedora Gooey Karma", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About Gooey Karma", None, QtGui.QApplication.UnicodeUTF8))
 

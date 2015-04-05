@@ -10,7 +10,7 @@ echo "Source: $sourceurl"
 pushd ~/rpmbuild/SOURCES
 wget "$sourceurl"
 popd
-rpmbuild -bb fedora-gooey-karma.spec
+rpmbuild -ba fedora-gooey-karma.spec
 
 
 #set +x

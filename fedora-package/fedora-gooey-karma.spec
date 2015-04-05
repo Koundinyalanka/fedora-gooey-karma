@@ -1,9 +1,9 @@
-%global commit 2fd265f7987da757b28db9d9dc11e7db9119d14e
+%global commit a5dcf62b42d42105ed8eecffd58a50fc3627e3f5
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           fedora-gooey-karma
 Version:        0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GUI tool for sending feedback about installed Test Update packages
 
 Group:          Development/Tools
@@ -18,12 +18,12 @@ BuildRequires:  python2-devel
 
 Requires:       python-fedora
 Requires:       fedora-cert
-Requires:       yum
-Requires:       yum-utils
+Requires:       dnf
 Requires:       bodhi-client
 Requires:       python-pyside
 Requires:       python-keyring
 Requires:       koji
+Requires:       PyQt4
 
 %description
 Fedora-gooey-karma helps you to easily and fast provide feedback for all testing
@@ -59,6 +59,9 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/fedora-gooey-karma.d
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Sun Apr  5 2015 Branislav Blaskovic <branislav@blaskovic.sk> - 0.1.3
+- Updated to DNF version
+
 * Mon Dec 9 2013 Branislav Blaskovic <branislav@blaskovic.sk> - 0.1-2
 - python2-devel added as build requires
 - removed deletion of buildroot dir

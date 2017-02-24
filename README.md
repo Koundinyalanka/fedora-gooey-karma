@@ -1,5 +1,8 @@
 # Fedora Gooey Karma
 
+* This repository is obsoleted and **project was moved** to [Pagure.io](https://pagure.io/fedora-qa/fedora-gooey-karma).
+
+
 fedora-gooey-karma provides similar functionality to the fedora-easy-karma via GUI. It also currently provides some extra info like: dnf info, bodhi info, test cases, bugs.
 
 ## Based on
